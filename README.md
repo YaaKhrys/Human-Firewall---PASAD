@@ -19,13 +19,16 @@ The project went beyond basic requirements by building a functional web applicat
 
 > *Application screenshots and key visuals*
 #### Homepage
-![Homepage](assets/images/home-preview.png)
+![Homepage](assets/images/HomepageMockup.png)
 
 #### Learning Hub
-![Learning Hub](assets/images/simulator-preview.png)
+![Learning Hub](assets/images/LearningHubMockup.png)
 
-#### Posters
-![Resources](assets/images/posters-preview.png)
+#### Simulator
+![Simulator](assets/images/SimulatorMockup.png)
+
+#### Resources
+![Resources](assets/images/ResourcesMockup.png)
 
 <br><br>
 
@@ -127,4 +130,4 @@ PASAD/
 
 <br><br>
 
-Thank you.
+Merci. Danke. Thank you. 
