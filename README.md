@@ -124,10 +124,10 @@ PASAD/
 
 ### ⚖️ Legal Disclaimer
 > [!IMPORTANT]  
-> This project is strictly for **educational and awareness purposes**.  
-> All phishing simulations and mockups are intended to help users recognize threats and must **not be used for malicious, deceptive, or unauthorized activities**.
-> Content is sourced from third parties; we assume no liability for external materials.
-> Our reference list highlights major contributors and is not exhaustive.
+> This project is strictly for **educational and awareness purposes**.<br>
+> All phishing simulations and mockups are intended to help users recognize threats and must **not be used for malicious, deceptive, or unauthorized activities**.<br>
+> Content is sourced from third parties; we assume no liability for external materials.<br>
+> Our reference list highlights major contributors and is not exhaustive.<br>
 
 <br><br>
 
