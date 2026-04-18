@@ -1,0 +1,197 @@
+/* ==========================================================================
+   Human Firewall - Global Styles & Animations
+   ========================================================================== */
+
+/* 1. Typography Imports (Ensures fonts load globally) */
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap");
+
+/* 2. Global Dark Mode & Base Transitions */
+html {
+  scroll-behavior: smooth;
+}
+
+html.dark {
+  color-scheme: dark;
+  background-color: #0f172a; /* Tailwind slate-900 fallback */
+  color: #f1f5f9; /* Tailwind slate-100 fallback */
+}
+
+body {
+  /* Smooth transition for theme switching */
+  transition:
+    background-color 0.3s ease-in-out,
+    color 0.3s ease-in-out,
+    border-color 0.3s ease-in-out;
+}
+
+/* Google Material Symbols Configuration */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 3. Custom Gradients & Shadows */
+.hero-gradient {
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(33, 112, 228, 0.05) 0%,
+    rgba(247, 249, 251, 1) 70%
+  );
+}
+
+html.dark .hero-gradient {
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(33, 112, 228, 0.1) 0%,
+    #0f172a 70%
+  );
+}
+
+.editorial-gradient {
+  background: linear-gradient(135deg, #0058be 0%, #2170e4 100%);
+}
+
+html.dark .editorial-gradient {
+  background: linear-gradient(135deg, #2170e4 0%, #0058be 100%);
+}
+
+/* 4. Accordion System (Learning Hub & FAQ) */
+.scroll-mt-24 {
+  scroll-margin-top: 6rem;
+}
+
+.accordion-content {
+  display: none;
+  opacity: 0;
+}
+
+.accordion-open .accordion-content {
+  display: block;
+  animation: fadeDown 0.3s ease-out forwards;
+}
+
+.accordion-trigger .expand-icon {
+  transition: transform 0.3s ease;
+}
+
+.accordion-open .expand-icon {
+  transform: rotate(180deg);
+}
+
+/* 5. Modal System (Posters & Simulator Intro) */
+#modal-overlay,
+#intro-modal {
+  display: none;
+  opacity: 0;
+  z-index: 9999; /* Ensures it sits above the fixed navbar */
+}
+
+#modal-overlay.active,
+#intro-modal.flex {
+  display: flex !important;
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* 6. Keyframe Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utility for image containers to prevent layout shifts */
+.img-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   GLOBAL DARK MODE OVERRIDES (Google Stitch specific)
+   ========================================================================== */
+
+/* 1. Root & Body Level */
+.dark body,
+.dark .bg-surface {
+  background-color: #020617 !important; /* slate-950 */
+  color: #f8fafc !important; /* slate-50 */
+}
+
+/* 2. Main Cards & Surfaces */
+.dark .bg-surface-container-lowest,
+.dark .bg-white,
+.dark div[class*="bg-surface-container"] {
+  background-color: #0f172a !important; /* slate-900 */
+  border-color: rgba(51, 65, 85, 0.5) !important; /* slate-700/50 */
+}
+
+/* 3. Inset Quote Boxes / Low Containers */
+.dark .bg-surface-container-low {
+  background-color: #1e293b !important; /* slate-800 */
+}
+
+/* 4. Headlines & Primary Text */
+.dark .text-primary,
+.dark h1,
+.dark h2,
+.dark h3 {
+  color: #60a5fa !important; /* blue-400 for better visibility */
+}
+
+/* 5. Body Text & Muted Content */
+.dark .text-on-surface-variant,
+.dark .text-slate-500 {
+  color: #94a3b8 !important; /* slate-400 */
+}
+
+.dark .text-on-surface,
+.dark span:not(.material-symbols-outlined) {
+  color: #f1f5f9 !important; /* slate-100 */
+}
+
+.dark .text-on-secondary-container {
+  color: #cbd5e1 !important; /* slate-300 */
+}
+
+/* 6. Fix for Outline Variants */
+.dark [class*="border-outline-variant"] {
+  border-color: rgba(71, 85, 105, 0.3) !important; /* slate-700/30 */
+}
+
+/* 7. Shadow & Glow Removal */
+.dark * {
+  box-shadow: none !important;
+}

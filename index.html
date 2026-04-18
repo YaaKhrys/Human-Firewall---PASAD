@@ -1,0 +1,911 @@
+<!doctype html>
+
+<!--
+  =============================================================================
+  FILE STRUCTURE OVERVIEW
+  =============================================================================
+  Project:  Human Firewall — Phishing Awareness Simulator
+  File:     index.html
+  Role:     Landing page — entry point of the application.
+
+  Related Files:
+    - education.html  → Education Hub (Learning Hub)
+    - simulator.html  → Scenario Engine (simulation page)
+    - results.html    → Results Dashboard (post-simulation)
+    - styles.css      → Custom non-Tailwind styles
+    - script.js       → All JavaScript logic and interactivity
+  =============================================================================
+-->
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Human Firewall | Protect Yourself and Your World</title>
+
+    <!-- ========================================================================= -->
+    <!-- 0. THEME BLOCKING SCRIPT (Prevents White Flash) -->
+    <!-- ========================================================================= -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- FONTS, ICONS, & FAVICON -->
+    <!-- ========================================================================= -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tab Icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+
+    <!-- Mobile/Bookmark Icon (Higher Res) -->
+    <link rel="apple-touch-icon" href="images/favicon.png" />
+
+    <!-- ========================================================================= -->
+    <!-- TAILWIND CSS & CONFIGURATION -->
+    <!-- ========================================================================= -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class" /* CRITICAL: Enables manual dark mode toggling */,
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eff1f3",
+              outline: "#727785",
+              "error-container": "#ffdad6",
+              "on-primary-fixed": "#001a42",
+              "on-primary": "#ffffff",
+              "secondary-container": "#b6ccff",
+              "outline-variant": "#c2c6d6",
+              "primary-fixed-dim": "#adc6ff",
+              "inverse-primary": "#adc6ff",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#d8e2ff",
+              "on-surface-variant": "#424754",
+              "surface-container-highest": "#e0e3e5",
+              "on-primary-container": "#fefcff",
+              "on-tertiary-fixed-variant": "#723600",
+              "on-primary-fixed-variant": "#004395",
+              primary: "#0058be",
+              "tertiary-container": "#b75b00",
+              "surface-bright": "#f7f9fb",
+              "on-tertiary-container": "#fffbff",
+              "tertiary-fixed-dim": "#ffb786",
+              "secondary-fixed": "#d8e2ff",
+              "surface-variant": "#e0e3e5",
+              secondary: "#495e8a",
+              "outline-variant": "#c2c6d6",
+              "secondary-fixed-dim": "#b1c6f9",
+              "inverse-on-surface": "#eff1f3",
+              primary: "#0058be",
+              "primary-fixed": "#d8e2ff",
+              "tertiary-container": "#b75b00",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "on-primary-fixed": "#001a42",
+              "on-secondary-fixed-variant": "#304671",
+              "secondary-fixed": "#d8e2ff",
+              background: "#f7f9fb",
+              "surface-container": "#eceef0",
+              secondary: "#495e8a",
+              "on-error": "#ffffff",
+              "on-secondary-fixed": "#001a42",
+              surface: "#f7f9fb",
+              "surface-container-low": "#f2f4f6",
+              tertiary: "#924700",
+              error: "#ba1a1a",
+              "on-tertiary-fixed": "#311400",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "on-tertiary": "#ffffff",
+              "surface-tint": "#005ac2",
+              "primary-container": "#2170e4",
+              "inverse-surface": "#2d3133",
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- CUSTOM STYLES -->
+    <!-- ========================================================================= -->
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body
+    class="bg-surface font-body text-on-surface antialiased dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300"
+  >
+    <!-- ========================================================================= -->
+    <!-- 1. NAVIGATION BAR (Global) -->
+    <!-- ========================================================================= -->
+
+    <!----- Top Navigation Bar --->
+    <!-- Main Nav Container -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-[100] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 h-16 flex items-center justify-between"
+    >
+      <!-- LEFT SIDE: Logo & Brand -->
+      <div class="flex items-center gap-2">
+        <a href="index.html" class="flex items-center gap-2">
+          <img
+            src="assets/images/logo.png"
+            alt="Logo"
+            class="w-6 h-6 object-contain"
+          />
+          <span
+            class="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100 font-headline whitespace-nowrap"
+          >
+            Human Firewall
+          </span>
+        </a>
+      </div>
+
+      <!-- CENTER: Navigation Links (Hidden on Mobile) -->
+      <div class="hidden md:flex items-center gap-8">
+        <a
+          class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+          href="education.html"
+          >Learning Hub</a
+        >
+        <a
+          class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+          href="simulator.html"
+          >Simulator</a
+        >
+        <a
+          class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+          href="resources.html"
+          >Resources</a
+        >
+      </div>
+
+      <!-- RIGHT SIDE: Controls & Profile -->
+      <div class="flex items-center gap-2 md:gap-4">
+        <!-- Theme Toggle -->
+        <button
+          id="theme-toggle"
+          class="material-symbols-outlined text-slate-500 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors"
+        >
+          dark_mode
+        </button>
+
+        <!-- Notifications -->
+        <button
+          class="material-symbols-outlined text-slate-500 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors hidden sm:block"
+        >
+          notifications
+        </button>
+
+        <!-- Shield -->
+        <button
+          class="material-symbols-outlined text-slate-500 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors hidden sm:block"
+        >
+          shield
+        </button>
+
+        <!-- Profile -->
+        <div
+          class="w-8 h-8 rounded-full border border-primary/20 overflow-hidden ml-2 cursor-pointer hover:ring-2 hover:ring-primary/30 transition-all"
+        >
+          <img
+            src="assets/images/undraw_pic-profile_nr49.png"
+            alt="Profile"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </nav>
+
+    <main class="pt-20">
+      <!-- ========================================================================= -->
+      <!-- 2. HERO SECTION -->
+      <!-- ========================================================================= -->
+      <section
+        class="hero-gradient relative overflow-hidden px-6 py-24 md:py-32 flex flex-col items-center"
+      >
+        <div class="max-w-4xl w-full text-center space-y-8 relative z-10">
+          <div
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-primary font-medium text-sm"
+          >
+            <span
+              class="material-symbols-outlined text-sm"
+              data-icon="verified_user"
+              >verified_user</span
+            >
+            <span>Personal &amp; Professional Safety</span>
+          </div>
+          <h1
+            class="text-5xl md:text-7xl font-extrabold font-headline tracking-tight text-on-surface leading-[1.1]"
+          >
+            Protect <span class="text-primary italic pr-5">Yourself</span>and
+            Your World
+          </h1>
+
+          <p
+            class="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed"
+          >
+            Empowering individuals with the knowledge to stay safe online,
+            whether at your desk or on the go. Build resilience for your career
+            and peace of mind for your personal life.
+          </p>
+          <div
+            class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
+          >
+            <!-- Navigates to the Learning Hub -->
+            <a
+              href="education.html"
+              class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-white font-semibold rounded-full shadow-lg hover:shadow-primary/25 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95 text-center"
+            >
+              Start Learning
+            </a>
+
+            <!-- Navigates to the Resources Page -->
+            <a
+              href="resources.html"
+              class="px-8 py-4 bg-transparent border border-outline-variant/30 text-primary font-semibold rounded-full hover:bg-surface-container-low transition-all duration-300 text-center"
+            >
+              Explore Resources
+            </a>
+          </div>
+        </div>
+
+        <!-- ------------------------- Asymmetric Bento-Style Data Grid ------------------------- -->
+        <div
+          class="mt-24 max-w-7xl w-full grid grid-cols-1 md:grid-cols-12 gap-6"
+        >
+          <!-- Large Feature Card -->
+          <div
+            class="md:col-span-7 bg-surface-container-lowest rounded-xl p-8 shadow-[0_20px_40px_-15px_rgba(25,28,30,0.04)] relative overflow-hidden group"
+          >
+            <div class="relative z-10 flex flex-col h-full justify-between">
+              <div>
+                <span
+                  class="material-symbols-outlined text-primary text-4xl mb-4"
+                  data-icon="volunteer_activism"
+                  >volunteer_activism</span
+                >
+                <h3 class="text-2xl font-bold font-headline mb-3">
+                  Individual Protection First
+                </h3>
+                <p class="text-on-surface-variant leading-relaxed max-w-md">
+                  Our approach focuses on the person. By learning to spot
+                  threats in your daily life, you naturally become the strongest
+                  link in your organization's security.
+                </p>
+              </div>
+              <div class="mt-12 flex items-end justify-between">
+                <div class="space-y-1">
+                  <span
+                    class="text-xs uppercase tracking-widest text-outline font-semibold"
+                    >Community Impact</span
+                  >
+                  <div
+                    class="text-3xl font-headline font-extrabold text-on-surface"
+                  >
+                    1.2M+ Secured
+                  </div>
+                </div>
+                <div
+                  class="h-16 w-32 bg-primary/5 rounded-lg flex items-center justify-center"
+                >
+                  <div class="flex gap-1 items-end h-8">
+                    <div class="w-1.5 h-4 bg-primary/40 rounded-full"></div>
+                    <div class="w-1.5 h-6 bg-primary/60 rounded-full"></div>
+                    <div class="w-1.5 h-8 bg-primary rounded-full"></div>
+                    <div class="w-1.5 h-5 bg-primary/40 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute top-0 right-0 w-64 h-64 -mr-16 -mt-16 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500"
+            ></div>
+          </div>
+          <!-- Secondary Card -->
+          <div
+            class="md:col-span-5 bg-surface-container-low rounded-xl p-8 flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="w-12 h-12 rounded-lg bg-tertiary-container flex items-center justify-center mb-6"
+              >
+                <span
+                  class="material-symbols-outlined text-white"
+                  data-icon="family_restroom"
+                  >family_restroom</span
+                >
+              </div>
+              <h3 class="text-xl font-bold font-headline mb-2">
+                Holistic Awareness
+              </h3>
+              <p class="text-sm text-on-surface-variant leading-relaxed">
+                From protecting your home Wi-Fi to identifying sophisticated
+                workplace scams, we cover every aspect of your digital
+                footprint.
+              </p>
+            </div>
+            <div
+              class="pt-8 border-t border-outline-variant/15 flex items-center gap-3"
+            >
+              <div class="flex -space-x-3">
+                <div
+                  class="w-8 h-8 rounded-full border-2 border-surface bg-slate-200"
+                >
+                  <img
+                    alt="User"
+                    class="rounded-full"
+                    data-alt="professional woman portrait with soft studio lighting, focused gaze, minimalist background"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgxYLfM0NavAzgsH2B3F6SJGHHxovEm8obtUH06S4qsbgsbTuT-hxw9Och8HI7tyXKvLyb8RmZI1PwaSbEguXNF3S6WMsX8j1o05g-TtxqCB4pLPl-NZ-PDFINUtMceZP57HS4iz2N3S5Mbnt4INhKlePFZqcXPsMCIs6wy6n0RLQ18AbHy_mXjHkSYPS0frU5TvFLlp64RcoRed_V_xRA60J-tMyu92z8PIXEaknru6F-Ld2L8udKGH57NQ53IlitAgAYL85v9Icw"
+                  />
+                </div>
+                <div
+                  class="w-8 h-8 rounded-full border-2 border-surface bg-slate-300"
+                >
+                  <img
+                    alt="User"
+                    class="rounded-full"
+                    data-alt="headshot of a smiling young man in creative office environment, bright natural light"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-RyGWn-W2SuarSjODinit1Vl4pxl71puBnWuY1P0lewtsWV4LOurpR7rgoJPvCRW7tUA8R8phxEWd9FWdG3Scyq_JIRo9oECF2v-GmTTQm0UfCySm5CEf8bsEwqJR6xdIW2CkkOrJDWyfn6RX_2NYl56V-eKQnPxc3IlKMPtSSkDzOfsp-UBE9ZvZ03K6bGtmkoyok8uWvtJK6nq9dtBK54MO1boYER9xbL4GuNqIeOwgV0x8ceJTBgtHNsBV9ExJp4iBnQEKiCfr"
+                  />
+                </div>
+              </div>
+              <span class="text-xs text-on-surface-variant font-medium"
+                >Loved by people across 400+ organizations</span
+              >
+            </div>
+          </div>
+          <!-- Stats Bar -->
+          <div
+            class="md:col-span-4 bg-surface-container-highest rounded-xl p-6 flex items-center gap-4"
+          >
+            <div class="text-primary">
+              <span
+                class="material-symbols-outlined text-3xl"
+                data-icon="favorite"
+                >favorite</span
+              >
+            </div>
+            <div>
+              <div class="text-2xl font-bold font-headline">98%</div>
+              <p
+                class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold"
+              >
+                User Confidence
+              </p>
+            </div>
+          </div>
+          <div
+            class="md:col-span-4 bg-white rounded-xl p-6 shadow-[0_10px_30px_-10px_rgba(25,28,30,0.04)] border border-outline-variant/10 flex items-center gap-4"
+          >
+            <div class="text-tertiary">
+              <span
+                class="material-symbols-outlined text-3xl"
+                data-icon="verified"
+                >verified</span
+              >
+            </div>
+            <div>
+              <div class="text-2xl font-bold font-headline">Real-world</div>
+              <p
+                class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold"
+              >
+                Scenarios Applied
+              </p>
+            </div>
+          </div>
+          <div
+            class="md:col-span-4 bg-primary text-white rounded-xl p-6 flex items-center justify-between"
+          >
+            <div>
+              <div class="text-2xl font-bold font-headline">Personal</div>
+              <p
+                class="text-xs text-on-primary/70 uppercase tracking-wider font-semibold"
+              >
+                Guardian Mode
+              </p>
+            </div>
+            <span
+              class="material-symbols-outlined text-3xl opacity-50"
+              data-icon="self_improvement"
+              >self_improvement</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- 3. SIMULATION PREVIEW SECTION -->
+      <!-- ========================================================================= -->
+      <section class="py-24 bg-surface">
+        <div class="max-w-7xl mx-auto px-6">
+          <div
+            class="flex flex-col md:flex-row items-end justify-between mb-16 gap-6"
+          >
+            <div class="max-w-xl">
+              <h2
+                class="text-3xl md:text-4xl font-extrabold font-headline mb-4"
+              >
+                Practice Makes Proof
+              </h2>
+              <p class="text-on-surface-variant leading-relaxed">
+                Security isn't a lecture; it's a skill. Our simulations use
+                real-life examples from social media, banking, and personal
+                email to help you spot a scam before it spots you.
+              </p>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <span class="text-3xl font-bold font-headline text-primary"
+                  >Daily</span
+                >
+                <span
+                  class="text-[10px] uppercase tracking-widest text-outline font-bold"
+                  >Insights</span
+                >
+              </div>
+              <div class="w-px h-12 bg-outline-variant/30"></div>
+              <div class="flex flex-col items-center">
+                <span class="text-3xl font-bold font-headline text-primary"
+                  >Any</span
+                >
+                <span
+                  class="text-[10px] uppercase tracking-widest text-outline font-bold"
+                  >Device</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- ------------------------- Phishing Cards Grid ------------------------- -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Phishing Card 1 -->
+            <div
+              class="bg-surface-container-lowest rounded-xl p-0 shadow-sm hover:shadow-xl transition-all duration-300 group"
+            >
+              <div class="h-1 bg-tertiary-container w-full rounded-t-xl"></div>
+              <div class="p-8">
+                <div class="flex justify-between items-start mb-8">
+                  <div class="space-y-1">
+                    <p
+                      class="text-[10px] uppercase tracking-widest font-bold text-outline"
+                    >
+                      Personal Life
+                    </p>
+                    <h4 class="font-bold text-on-surface">
+                      Package Delivery Alert
+                    </h4>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-tertiary"
+                    data-icon="local_shipping"
+                    style="font-variation-settings: &quot;FILL&quot; 1"
+                    >local_shipping</span
+                  >
+                </div>
+                <div class="space-y-6">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center"
+                    >
+                      <span
+                        class="material-symbols-outlined text-sm"
+                        data-icon="sms"
+                        >sms</span
+                      >
+                    </div>
+                    <div class="text-xs">
+                      <p class="font-bold">
+                        From:
+                        <span class="text-on-surface-variant font-normal italic"
+                          >+1 (555) 012-3456</span
+                        >
+                      </p>
+                      <p class="text-outline">Sent: Just now</p>
+                    </div>
+                  </div>
+                  <div
+                    class="h-24 bg-surface-container-low rounded-lg p-3 overflow-hidden"
+                  >
+                    <p class="text-[11px] text-on-surface-variant line-clamp-3">
+                      [Alert] Your package delivery has been suspended due to an
+                      incomplete address. Please update your details within 24
+                      hours to avoid return to sender:
+                      https://ship-verify.net/pkg-293
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="w-full mt-8 py-3 rounded-lg border border-primary/20 text-primary font-bold text-sm hover:bg-primary hover:text-white transition-all"
+                >
+                  Try Scenario
+                </button>
+              </div>
+            </div>
+            <!-- Phishing Card 2 -->
+            <div
+              class="bg-surface-container-lowest rounded-xl p-0 shadow-sm hover:shadow-xl transition-all duration-300 group"
+            >
+              <div class="h-1 bg-primary w-full rounded-t-xl"></div>
+              <div class="p-8">
+                <div class="flex justify-between items-start mb-8">
+                  <div class="space-y-1">
+                    <p
+                      class="text-[10px] uppercase tracking-widest font-bold text-outline"
+                    >
+                      Work Context
+                    </p>
+                    <h4 class="font-bold text-on-surface">
+                      Meeting Invite Request
+                    </h4>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-primary"
+                    data-icon="event"
+                    >event</span
+                  >
+                </div>
+                <div class="space-y-6">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center"
+                    >
+                      <span
+                        class="material-symbols-outlined text-sm"
+                        data-icon="mail"
+                        >mail</span
+                      >
+                    </div>
+                    <div class="text-xs">
+                      <p class="font-bold">
+                        From:
+                        <span class="text-on-surface-variant font-normal italic"
+                          >external-collab@partner-sync.com</span
+                        >
+                      </p>
+                      <p class="text-outline">Sent: 15 mins ago</p>
+                    </div>
+                  </div>
+                  <div
+                    class="h-24 bg-surface-container-low rounded-lg p-3 overflow-hidden"
+                  >
+                    <p class="text-[11px] text-on-surface-variant line-clamp-3">
+                      You've been invited to a new project sync. Please review
+                      the shared document and confirm your attendance for
+                      tomorrow's briefing by logging into the portal below.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="w-full mt-8 py-3 rounded-lg border border-primary/20 text-primary font-bold text-sm hover:bg-primary hover:text-white transition-all"
+                >
+                  Try Scenario
+                </button>
+              </div>
+            </div>
+            <!-- Phishing Card 3 -->
+            <div
+              class="bg-surface-container-lowest rounded-xl p-0 shadow-sm hover:shadow-xl transition-all duration-300 group"
+            >
+              <div class="h-1 bg-outline-variant w-full rounded-t-xl"></div>
+              <div class="p-8">
+                <div class="flex justify-between items-start mb-8">
+                  <div class="space-y-1">
+                    <p
+                      class="text-[10px] uppercase tracking-widest font-bold text-outline"
+                    >
+                      Social Media
+                    </p>
+                    <h4 class="font-bold text-on-surface">
+                      Security Alert: Login Attempt
+                    </h4>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-outline"
+                    data-icon="security"
+                    >security</span
+                  >
+                </div>
+                <div class="space-y-6">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center"
+                    >
+                      <span
+                        class="material-symbols-outlined text-sm"
+                        data-icon="person"
+                        >person</span
+                      >
+                    </div>
+                    <div class="text-xs">
+                      <p class="font-bold">
+                        From:
+                        <span class="text-on-surface-variant font-normal italic"
+                          >support@social-secure.app</span
+                        >
+                      </p>
+                      <p class="text-outline">Sent: 1 hour ago</p>
+                    </div>
+                  </div>
+                  <div
+                    class="h-24 bg-surface-container-low rounded-lg p-3 overflow-hidden"
+                  >
+                    <p class="text-[11px] text-on-surface-variant line-clamp-3">
+                      We noticed a login to your account from a new device in
+                      Eastern Europe. If this wasn't you, please secure your
+                      account immediately by clicking the link below.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="w-full mt-8 py-3 rounded-lg border border-primary/20 text-primary font-bold text-sm hover:bg-primary hover:text-white transition-all"
+                >
+                  Try Scenario
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- 4. SIGNATURE CTA SECTION -->
+      <!-- ========================================================================= -->
+      <!-- Risk Meter Section -->
+      <section class="py-24 bg-surface-container-low">
+        <div
+          class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+        >
+          <div class="order-2 md:order-1">
+            <div class="bg-white p-10 rounded-2xl shadow-xl space-y-10">
+              <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold font-headline">
+                  Personal Resilience Score
+                </h3>
+                <span
+                  class="px-3 py-1 rounded-full bg-secondary-container text-primary text-[10px] font-bold uppercase tracking-wider"
+                  >Improving Daily</span
+                >
+              </div>
+              <!-- Custom Gauge Component -->
+              <div class="relative pt-8">
+                <div
+                  class="h-4 w-full bg-secondary-container rounded-full overflow-hidden flex"
+                >
+                  <div class="h-full bg-primary w-1/4"></div>
+                  <div class="h-full bg-tertiary w-1/4"></div>
+                  <div
+                    class="h-full bg-error w-1/4 border-r-4 border-white"
+                  ></div>
+                </div>
+                <div
+                  class="absolute -top-2 left-[35%] transform -translate-x-1/2 flex flex-col items-center"
+                >
+                  <div
+                    class="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-md"
+                  ></div>
+                  <span class="text-xs font-bold mt-2">YOU: 82% SAFE</span>
+                </div>
+                <div
+                  class="flex justify-between mt-4 text-[10px] font-bold text-outline tracking-widest uppercase"
+                >
+                  <span>Vulnerable</span>
+                  <span>Aware</span>
+                  <span>Resilient</span>
+                </div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 pt-4">
+                <div class="p-4 bg-surface rounded-xl text-center">
+                  <div class="text-lg font-bold">100%</div>
+                  <div
+                    class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold"
+                  >
+                    Reporting
+                  </div>
+                </div>
+                <div class="p-4 bg-surface rounded-xl text-center">
+                  <div class="text-lg font-bold">5/5</div>
+                  <div
+                    class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold"
+                  >
+                    Awareness
+                  </div>
+                </div>
+                <div
+                  class="p-4 bg-surface rounded-xl text-center border-2 border-primary/20"
+                >
+                  <div class="text-lg font-bold text-primary">High</div>
+                  <div
+                    class="text-[9px] uppercase tracking-widest text-primary font-bold"
+                  >
+                    Safety Grade
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="order-1 md:order-2 space-y-6">
+            <h2 class="text-4xl font-extrabold font-headline leading-tight">
+              Master Your Digital World. Anywhere You Are.
+            </h2>
+            <p class="text-lg text-on-surface-variant leading-relaxed">
+              Safety is a mindset, not a chore. We provide the tools to build
+              intuitive security habits that protect your family photos as much
+              as your company's data.
+            </p>
+            <ul class="space-y-4 pt-4">
+              <li class="flex items-center gap-3">
+                <span
+                  class="material-symbols-outlined text-primary"
+                  data-icon="check_circle"
+                  style="font-variation-settings: &quot;FILL&quot; 1"
+                  >check_circle</span
+                >
+                <span class="font-medium"
+                  >Personal safety dashboard for home and work</span
+                >
+              </li>
+              <li class="flex items-center gap-3">
+                <span
+                  class="material-symbols-outlined text-primary"
+                  data-icon="check_circle"
+                  style="font-variation-settings: &quot;FILL&quot; 1"
+                  >check_circle</span
+                >
+                <span class="font-medium"
+                  >Micro-learning that fits into your coffee break</span
+                >
+              </li>
+              <li class="flex items-center gap-3">
+                <span
+                  class="material-symbols-outlined text-primary"
+                  data-icon="check_circle"
+                  style="font-variation-settings: &quot;FILL&quot; 1"
+                  >check_circle</span
+                >
+                <span class="font-medium"
+                  >Protect your personal identity and accounts</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <!-- Signature CTA Section -->
+      <section class="py-24 bg-surface">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+          <div
+            class="bg-primary-container p-12 md:p-20 rounded-[2rem] text-white relative overflow-hidden"
+          >
+            <div class="relative z-10 space-y-8">
+              <h2
+                class="text-4xl md:text-5xl font-bold font-headline tracking-tight"
+              >
+                Ready to protect your world?
+              </h2>
+              <p class="text-white/80 text-lg max-w-xl mx-auto font-body">
+                Join thousands of individuals who have taken control of their
+                digital safety with Human Firewall.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <div class="flex gap-4">
+                  <!-- Navigates to the Simulator -->
+                  <a
+                    href="education.html"
+                    class="px-10 py-5 bg-white text-primary font-bold rounded-full hover:shadow-xl transition-all text-center"
+                  >
+                    Start Free Training
+                  </a>
+
+                  <!-- Navigates to a specific section or external link -->
+                  <a
+                    href="#"
+                    class="px-10 py-5 bg-white/10 text-white font-bold rounded-full border border-white/20 hover:bg-white/20 transition-all text-center"
+                  >
+                    For Businesses
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- Background Decoration -->
+            <div class="absolute top-0 left-0 w-full h-full">
+              <div
+                class="absolute top-10 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"
+              ></div>
+              <div
+                class="absolute bottom-10 left-10 w-96 h-96 bg-white/5 rounded-full blur-3xl"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- 5. FOOTER -->
+    <!-- ========================================================================= -->
+    <footer
+      class="w-full py-12 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/15 dark:border-slate-800/15"
+    >
+      <div
+        class="max-w-7xl px-8 flex flex-col md:flex-row justify-between items-center gap-8 mx-auto"
+      >
+        <div class="space-y-4 text-center md:text-left">
+          <span class="font-manrope font-semibold text-slate-400"
+            >Human Firewall</span
+          >
+          <p
+            class="font-inter text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 max-w-xs"
+          >
+            © 2026 PASAD &nbsp;•&nbsp; G2<br />Protecting the Digital Community.
+          </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-8">
+          <a
+            class="font-inter text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-blue-600 underline-offset-4 underline"
+            href="#"
+            >Safety Policy</a
+          >
+          <a
+            class="font-inter text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-blue-600 underline-offset-4 underline"
+            href="#"
+            >Privacy</a
+          >
+          <a
+            class="font-inter text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-blue-600 underline-offset-4 underline"
+            href="#"
+            >Resources</a
+          >
+          <a
+            class="font-inter text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-blue-600 underline-offset-4 underline"
+            href="#"
+            >Help</a
+          >
+        </div>
+        <div class="flex gap-4">
+          <span
+            class="material-symbols-outlined text-slate-400"
+            data-icon="lock"
+            >lock</span
+          >
+          <span
+            class="material-symbols-outlined text-slate-400"
+            data-icon="verified"
+            >verified</span
+          >
+        </div>
+      </div>
+    </footer>
+    <!-- ------------------------- JavaScript — loaded last for performance ------------------------- -->
+    <script src="assets/script.js"></script>
+  </body>
+</html>

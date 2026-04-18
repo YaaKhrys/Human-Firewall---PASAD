@@ -1,0 +1,1497 @@
+<!doctype html>
+
+<!--
+  =============================================================================
+  FILE STRUCTURE OVERVIEW
+  =============================================================================
+  Project:  Human Firewall — Phishing Awareness Simulator
+  File:     education.html
+  Role:     Education Hub — Learning module with sticky sidebar navigation,
+            bento content grid, and FAQ accordion.
+
+  Related Files:
+    - index.html      → Landing page
+    - simulator.html  → Scenario Engine
+    - results.html    → Results Dashboard
+    - styles.css      → Custom non-Tailwind styles
+    - script.js       → FAQ accordion, sidebar scroll-spy, and shared logic
+  =============================================================================
+-->
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Learning Hub | Human Firewall</title>
+
+    <!-- ========================================================================= -->
+    <!-- 0. THEME BLOCKING SCRIPT (Prevents White Flash) -->
+    <!-- ========================================================================= -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- FONTS, ICONS, & FAVICON -->
+    <!-- ========================================================================= -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tab Icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+
+    <!-- Mobile/Bookmark Icon (Higher Res) -->
+    <link rel="apple-touch-icon" href="assets/images/favicon.png" />
+
+    <!-- ========================================================================= -->
+    <!-- TAILWIND CSS & CONFIGURATION -->
+    <!-- ========================================================================= -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              secondary: "#495e8a",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#eceef0",
+              "surface-container-highest": "#e0e3e5",
+              "outline-variant": "#c2c6d6",
+              outline: "#727785",
+              "surface-container-low": "#f2f4f6",
+              "surface-container-high": "#e6e8ea",
+              "surface-bright": "#f7f9fb",
+              "on-surface-variant": "#424754",
+              "on-primary-container": "#fefcff",
+              "on-tertiary-fixed-variant": "#723600",
+              "on-secondary-fixed-variant": "#304671",
+              "tertiary-fixed": "#ffdcc6",
+              "secondary-fixed-dim": "#b1c6f9",
+              "tertiary-fixed-dim": "#ffb786",
+              "on-secondary-container": "#405682",
+              "inverse-primary": "#adc6ff",
+              "on-surface": "#191c1e",
+              primary: "#0058be",
+              "on-secondary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-container": "#fffbff",
+              "primary-fixed-dim": "#adc6ff",
+              "on-tertiary": "#ffffff",
+              "on-background": "#191c1e",
+              surface: "#f7f9fb",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#2d3133",
+              "primary-container": "#2170e4",
+              "on-secondary-fixed": "#001a42",
+              error: "#ba1a1a",
+              "surface-variant": "#e0e3e5",
+              "error-container": "#ffdad6",
+              tertiary: "#924700",
+              "primary-fixed": "#d8e2ff",
+              "tertiary-container": "#b75b00",
+              "on-primary-fixed-variant": "#004395",
+              background: "#f7f9fb",
+              "on-primary-fixed": "#001a42",
+              "inverse-on-surface": "#eff1f3",
+              "secondary-container": "#b6ccff",
+              "secondary-fixed": "#d8e2ff",
+              "surface-dim": "#d8dadc",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed": "#311400",
+              "surface-tint": "#005ac2",
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- CUSTOM STYLES -->
+    <!-- ========================================================================= -->
+    <!-- CSS Stylesheet-->
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body
+    class="bg-surface text-on-surface antialiased dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300"
+  >
+    <!-- ========================================================================= -->
+    <!-- 1. NAVIGATION BAR (Global) -->
+    <!-- ========================================================================= -->
+    <!----- Top Navigation Bar --->
+    <header
+      class="sticky top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none"
+    >
+      <div
+        class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto"
+      >
+        <div class="flex items-center gap-8">
+          <!-- Logo and Brand Name -->
+          <a href="index.html" class="flex items-center gap-3">
+            <img
+              src="assets/images/logo.png"
+              alt="Logo"
+              class="w-7 h-7 object-contain"
+            />
+            <span
+              class="text-xl font-bold tracking-tight text-slate-900 dark:text-white whitespace-nowrap"
+            >
+              Human Firewall
+            </span>
+          </a>
+
+          <!-- Desktop Navigation -->
+          <nav
+            class="hidden md:flex items-center gap-6 font-manrope text-sm font-medium"
+          >
+            <a
+              class="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 pb-1"
+              href="education.html"
+            >
+              Learning Hub
+            </a>
+            <a
+              class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 hover:opacity-80"
+              href="simulator.html"
+            >
+              Simulator
+            </a>
+            <a
+              class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors duration-200 hover:opacity-80"
+              href="resources.html"
+            >
+              Resources
+            </a>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button
+            class="material-symbols-outlined text-outline hover:text-primary transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+            id="theme-toggle"
+          >
+            dark_mode
+          </button>
+          <img
+            alt="User profile"
+            class="w-8 h-8 rounded-full border-2 border-primary/20"
+            src="assets/images/undraw_pic-profile_nr49.png"
+          />
+        </div>
+      </div>
+      <div class="bg-slate-100/50 dark:bg-slate-800/50 h-px"></div>
+    </header>
+
+    <!-- ========================================================================= -->
+    <!-- 2. LEARNING HUB SECTION -->
+    <!-- ========================================================================= -->
+
+    <main class="max-w-7xl mx-auto px-6 py-8 flex gap-12">
+      <!-- Left Sidebar Navigation (Table of Contents) -->
+      <aside class="hidden lg:block w-64 shrink-0 sticky top-28 self-start">
+        <div class="bg-surface-container-low rounded-xl p-6 space-y-2">
+          <h3
+            class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-6 px-3"
+          >
+            Table of Contents
+          </h3>
+          <nav class="flex flex-col gap-1">
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-primary bg-primary-container/10 rounded-lg group transition-all"
+              href="#social-engineering"
+            >
+              <span
+                class="material-symbols-outlined text-[18px]"
+                data-icon="psychology"
+                >psychology</span
+              >
+              Social Engineering
+            </a>
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all"
+              href="#attack-types"
+            >
+              <span
+                class="material-symbols-outlined text-[18px]"
+                data-icon="hub"
+                >hub</span
+              >
+              Attack Types
+            </a>
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all"
+              href="#phishing-overview"
+            >
+              <span
+                class="material-symbols-outlined text-[18px]"
+                data-icon="alternate_email"
+                >alternate_email</span
+              >
+              Phishing Overview
+            </a>
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all"
+              href="#human-factor"
+            >
+              <span
+                class="material-symbols-outlined text-[18px]"
+                data-icon="person_search"
+                >person_search</span
+              >
+              Human Factor
+            </a>
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all"
+              href="#defense-strategies"
+            >
+              <span
+                class="material-symbols-outlined text-[18px]"
+                data-icon="verified_user"
+                >verified_user</span
+              >
+              Defense Strategies
+            </a>
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all"
+              href="#legal-law"
+            >
+              <span
+                class="material-symbols-outlined text-[18px]"
+                data-icon="gavel"
+                >gavel</span
+              >
+              Legal / Law
+            </a>
+            <a
+              class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-all"
+              href="#faq"
+            >
+              <span
+                class="material-symbols-outlined text-[18px]"
+                data-icon="help_center"
+                >help_center</span
+              >
+              FAQ
+            </a>
+          </nav>
+        </div>
+        <div
+          class="mt-8 p-6 bg-primary-container rounded-xl text-on-primary-container relative overflow-hidden group"
+        >
+          <div class="relative z-10">
+            <p class="text-xs font-semibold opacity-80 mb-1">Weekly Goal</p>
+            <p class="text-lg font-bold mb-4">Complete 3 Simulations</p>
+            <div class="h-2 w-full bg-white/20 rounded-full mb-2">
+              <div class="h-full w-2/3 bg-white rounded-full"></div>
+            </div>
+            <p class="text-[10px] opacity-80">66% toward your security badge</p>
+          </div>
+          <div
+            class="absolute -right-4 -bottom-4 opacity-10 transform group-hover:scale-110 transition-transform"
+          >
+            <span class="material-symbols-outlined text-8xl" data-icon="shield"
+              >shield</span
+            >
+          </div>
+        </div>
+      </aside>
+      <!-- Main Content Area -->
+      <div class="flex-1 space-y-16">
+        <!-- ========================================================================= -->
+        <!-- 3. HERO SECTION -->
+        <!-- ========================================================================= -->
+        <section
+          class="relative rounded-[2rem] overflow-hidden bg-slate-900 text-white min-h-[400px] flex items-center p-12"
+        >
+          <div class="absolute inset-0 opacity-40">
+            <img
+              alt="Cybersecurity grid"
+              class="w-full h-full object-cover"
+              data-alt="Abstract glowing blue tech grid on dark background with subtle bokeh and digital matrix textures"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYcggfh1us4rYriF5EnmsfPv5diJjhTRqvTzkAiDnbi18nxtzK8xwuajYHI3tPNZsb8OnXJhG7wqjhyC1On7cUMN4LxJeD3Dac-10UUZQScMplsdP2z8n653paaVigvQZY2F4WMSHGfnWU1qBRffFIzznMERTVU53WkAHmXNyBUVTs3zj6P9UOzmjObzQbAm1ckZWG-Qpfu6x8hNtj_Ve2AXC-MDQKK95lUk1c2Ck-_MXJ150wQ2rD15lBn2TN-v8wPNe4lvIl-NBw"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"
+            ></div>
+          </div>
+          <div class="relative z-10 max-w-2xl">
+            <span
+              class="px-4 py-1.5 bg-blue-600 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block"
+              >Human Firewall Academy</span
+            >
+            <h1 class="text-5xl font-extrabold leading-tight mb-6">
+              Empowering the <span class="text-blue-400">Human Layer</span> of
+              Security.
+            </h1>
+            <p class="text-lg text-slate-300 font-light leading-relaxed">
+              Technology is only half the battle. Our mission is to transform
+              every individual into a resilient sentinel against the evolving
+              landscape of social engineering.
+            </p>
+          </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- 4. LESSONS SECTION -->
+        <!-- ========================================================================= -->
+
+        <!-- ------------------------- 1. Social Engineering ------------------------- -->
+        <section class="scroll-mt-24" id="social-engineering">
+          <div class="flex items-center gap-4 mb-8">
+            <div
+              class="w-12 h-12 rounded-xl bg-tertiary-container flex items-center justify-center text-white shadow-lg shadow-tertiary-container/20"
+            >
+              <span class="material-symbols-outlined" data-icon="psychology"
+                >psychology</span
+              >
+            </div>
+            <div>
+              <h2 class="text-3xl font-bold text-on-surface">
+                Social Engineering
+              </h2>
+              <p class="text-on-surface-variant text-sm italic">
+                The Art of Human Hacking
+              </p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <span
+                  class="material-symbols-outlined text-primary"
+                  data-icon="person_search"
+                >
+                  person_search
+                </span>
+                What is it & Why it Matters
+              </h4>
+              <p class="text-sm text-on-surface-variant leading-relaxed">
+                A psychological manipulation technique used to trick individuals
+                into revealing confidential information or performing actions
+                that compromise security. It exploits
+                <span class="font-bold"
+                  >human emotions and cognitive biases</span
+                >, making it one of the most effective methods for
+                cybercriminals to bypass technical defenses.
+              </p>
+
+              <!-- New Section with space -->
+              <p class="text-sm text-on-surface-variant leading-relaxed mt-4">
+                It
+                <span class="font-bold">exploits human psychology</span> for
+                fraud, data theft, and unauthorized system access.
+                <span class="italic"
+                  >Humans are easier to exploit than technical
+                  systems</span
+                >.
+              </p>
+
+              <!-- New Section with space -->
+              <p class="text-sm text-on-surface-variant leading-relaxed mt-4">
+                It matters because it
+                <span class="font-bold">bypasses encryptions </span>
+                targeting the unpatchable factor: human trust.
+                Exploiting
+                <span class="italic"
+                  >human natural curiosity & a desire to help</span curiosity or a desire to help
+                >, attackers
+                turn users into "keys" to access systems.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <span
+                  class="material-symbols-outlined text-primary"
+                  data-icon="schema"
+                >
+                  schema
+                </span>
+                Types of Social Engineering Attacks
+              </h4>
+
+              <div class="space-y-4">
+                <!-- Phishing Group -->
+                <div class="border-l-2 border-primary/20 pl-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold text-on-surface"
+                      >Phishing (60%)</span
+                    >
+                    <span class="text-xs font-bold text-primary"
+                      >$17.2 Billion</span
+                    >
+                  </div>
+                  <p class="text-xs text-on-surface-variant italic">
+                    Smishing (SMS), Vishing (Voice), Quishing (QR), Whaling
+                  </p>
+                </div>
+
+                <!-- Pretexting Group -->
+                <div class="border-l-2 border-primary/20 pl-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold text-on-surface"
+                      >Pretexting (25%)</span
+                    >
+                    <span class="text-xs font-bold text-primary"
+                      >$4.8 Billion</span
+                    >
+                  </div>
+                  <p class="text-xs text-on-surface-variant italic">
+                    BEC (Business Email), Romance Scams, Honey Trapping
+                  </p>
+                </div>
+
+                <!-- Baiting Group -->
+                <div class="border-l-2 border-primary/20 pl-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold text-on-surface">Baiting (6%)</span>
+                    <span class="text-xs font-bold text-primary"
+                      >$4.5 Billion</span
+                    >
+                  </div>
+                  <p class="text-xs text-on-surface-variant italic">
+                    Investment Scams, Malicious USBs, "Free" Downloads
+                  </p>
+                </div>
+
+                <!-- Other Categories (Grid for smaller items) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <div class="text-xs">
+                    <span class="font-bold">Quid Pro Quo (4%):</span> Tech
+                    Support Fraud ($1.1B)
+                  </div>
+                  <div class="text-xs">
+                    <span class="font-bold">Scareware (3%):</span> Fake
+                    Antivirus ($900M)
+                  </div>
+                  <div class="text-xs">
+                    <span class="font-bold">Watering Hole (1.5%):</span> Website
+                    Compromise ($500M)
+                  </div>
+                  <div class="text-xs">
+                    <span class="font-bold">Tailgating (0.5%):</span> Physical
+                    Entry ($250M)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-outline-variant/10"
+            >
+              <h3
+                class="text-xl font-bold mb-4 text-primary flex items-center gap-2"
+              >
+                <span class="material-symbols-outlined" data-icon="analytics"
+                  >analytics</span
+                >
+                The 80/20 Principle
+              </h3>
+              <p class="text-on-surface-variant leading-relaxed mb-6">
+                Security experts often focus on the 20% of technical
+                infrastructure. However,
+                <span class="font-bold text-on-surface"
+                  >80% of effective defense</span
+                >
+                relies on the decisions made by individuals. You aren't the weak
+                link; you are the primary defense.
+              </p>
+              <div
+                class="bg-surface-container-low rounded-xl p-4 border-l-4 border-primary"
+              >
+                <p class="text-sm font-medium text-on-secondary-container">
+                  "Attackers don't break in, they log in—usually with your
+                  help."
+                </p>
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-outline-variant/10"
+            >
+              <h3
+                class="text-xl font-bold mb-4 text-primary flex items-center gap-2"
+              >
+                <span class="material-symbols-outlined" data-icon="split_screen"
+                  >splitscreen</span
+                >
+                Dual-Context Targeting
+              </h3>
+              <p class="text-on-surface-variant leading-relaxed">
+                Attackers target both your
+                <span class="font-bold text-on-surface">Personal Life</span>
+                (shopping, social media, family) and
+                <span class="font-bold text-on-surface">Work Life</span> (HR
+                requests, payroll, urgent tasks). They exploit the overlap to
+                catch you off-guard.
+              </p>
+              <div class="mt-6 flex gap-4">
+                <div
+                  class="flex-1 text-center p-3 rounded-lg bg-surface-container-low"
+                >
+                  <span
+                    class="material-symbols-outlined text-secondary"
+                    data-icon="home"
+                    >home</span
+                  >
+                  <p class="text-xs font-bold mt-1 uppercase">Personal</p>
+                </div>
+                <div
+                  class="flex-1 text-center p-3 rounded-lg bg-surface-container-low"
+                >
+                  <span
+                    class="material-symbols-outlined text-secondary"
+                    data-icon="business_center"
+                    >business_center</span
+                  >
+                  <p class="text-xs font-bold mt-1 uppercase">Work</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------- 2. Attack Types ------------------------- -->
+        <section
+          class="scroll-mt-24 bg-surface-container-low -mx-6 px-6 py-16 rounded-[3rem]"
+          id="attack-types"
+        >
+          <div class="flex flex-col items-center text-center mb-6">
+            <span
+              class="material-symbols-outlined text-primary text-5xl mb-4"
+              data-icon="warning"
+              >warning</span
+            >
+            <h2 class="text-3xl font-bold mb-2">Modern Attack Vectors</h2>
+            <p class="text-on-surface-variant max-w-xl">
+              Recognition is the first step in prevention. These are the most
+              common methods used to bypass technical firewalls.
+            </p>
+          </div>
+
+
+<!-- ATTACK VECTORS: GLOBAL VS. GHANAIAN CONTEXT-->
+
+<div class="bg-surface-container-low dark:bg-slate-900/50 rounded-3xl p-8 mb-6 grid md:grid-cols-2 gap-12 relative overflow-hidden">
+
+  <!-- Vertical Separator (Visible on Desktop) -->
+  <div class="hidden md:block absolute left-1/2 top-12 bottom-12 w-px bg-outline-variant/30"></div>
+
+  <!-- Left Side: Global Attack Vectors -->
+  <div class="space-y-6">
+    <h4 class="font-bold text-lg mb-4 flex items-center gap-2 text-primary">
+      <span class="material-symbols-outlined" data-icon="public">public</span>
+      Global Attack Vectors
+    </h4>
+
+    <div class="space-y-4">
+      <!-- Whaling -->
+      <div>
+        <h5 class="font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-xs">water</span> Whaling
+        </h5>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          High-level targeting of CEOs or CFOs. Often involves sophisticated fraud aimed at wire transfers or confidential corporate data.
+        </p>
+      </div>
+
+      <!-- BEC -->
+      <div>
+        <h5 class="font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-xs">business</span> Business Email Compromise (BEC)
+        </h5>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          Impersonating a trusted vendor or colleague to manipulate business processes or divert payments.
+        </p>
+      </div>
+
+      <!-- Delivery Scams -->
+      <div>
+        <h5 class="font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-xs">local_shipping</span> Delivery Scams
+        </h5>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          "You have a missed parcel" messages that exploit curiosity to install malware or steal credentials via fake tracking links.
+        </p>
+      </div>
+      <!-- Quishing (QR Code Phishing) -->
+<div>
+  <h5 class="font-bold text-sm text-on-surface flex items-center gap-2">
+    <span class="material-symbols-outlined text-xs">qr_code_2</span> Quishing (QR Code Phishing)
+  </h5>
+  <p class="text-xs text-on-surface-variant leading-relaxed">
+    Malicious QR codes hidden in plain sight like medias or email attachments, that bypass traditional link filters to lead you to fraudulent sites.
+  </p>
+</div>
+
+<!-- Deepfake Vishing & AI Voice Cloning -->
+<div>
+  <h5 class="font-bold text-sm text-on-surface flex items-center gap-2">
+    <span class="material-symbols-outlined text-xs">record_voice_over</span> AI Voice Cloning (Deepfake Vishing)
+  </h5>
+  <p class="text-xs text-on-surface-variant leading-relaxed">
+    Using 3seconds or less to clone a trusted person's voice. Scammers use "deepfakes" on calls to authorize urgent transfers or bypass identity checks.
+  </p>
+</div>
+
+    </div>
+  </div>
+
+  <!-- Right Side: Ghanaian & West African Context -->
+  <div class="space-y-6">
+    <h4 class="font-bold text-lg mb-4 flex items-center gap-2 text-primary">
+      <span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+      Ghanaian & African Context
+    </h4>
+
+    <div class="space-y-4">
+      <!-- MoMo Fraud -->
+      <div class="bg-primary/5 dark:bg-primary/10 p-4 rounded-xl border border-primary/10">
+        <h5 class="font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-xs text-primary">payments</span> Mobile Money (MoMo) Fraud
+        </h5>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          The "Wrong Transaction" scam or fake reversal requests. Fraudsters exploit interoperability and social engineering to steal wallet balances.
+        </p>
+      </div>
+
+      <!-- Romance/Sakawa Scams -->
+      <div class="bg-primary/5 dark:bg-primary/10 p-4 rounded-xl border border-primary/10">
+        <h5 class="font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-xs text-primary">favorite</span> Romance & "Sakawa" Fraud
+        </h5>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          Long-term emotional manipulation and fake identities targeting local and international victims for financial gain.
+        </p>
+      </div>
+
+      <!-- SIM Swap & Job Scams -->
+      <div class="bg-primary/5 dark:bg-primary/10 p-4 rounded-xl border border-primary/10">
+        <h5 class="font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-xs text-primary">sim_card</span> SIM Swapping & Job Scams
+        </h5>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          Unauthorized account takeovers or fake recruitment (e.g., Police/Army recruitment) that require upfront "processing" fees.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ATTACK VECTORS: OTHER ATTACK VECTORS CARDS-->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Adversary-in-the-Middle (AiTM) -->
+            <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 hover:translate-y-[-4px] transition-transform">
+              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 mb-4">
+                <span class="material-symbols-outlined" data-icon="swap_calls">swap_calls</span>
+              </div>
+              <h4 class="font-bold mb-2">AiTM Phishing</h4>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                Adversary-in-the-Middle. These attacks intercept active login sessions to steal MFA cookies, allowing hackers to bypass two-factor authentication entirely without needing your secret code.
+              </p>
+            </div>
+
+            <!-- Sycophancy Attacks -->
+            <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 hover:translate-y-[-4px] transition-transform">
+              <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 mb-4">
+                <span class="material-symbols-outlined" data-icon="forum">forum</span>
+              </div>
+              <h4 class="font-bold mb-2">Sycophancy Attacks</h4>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                AI agents are now tuned to match your psychological profile. They use targeted flattery and agreement to build fake trust, making you more likely to lower your guard for a "friend."
+              </p>
+            </div>
+
+            <!-- WhatsApp Hijacking -->
+            <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 hover:translate-y-[-4px] transition-transform">
+              <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 mb-4">
+                <span class="material-symbols-outlined" data-icon="chat_error">chat_error</span>
+              </div>
+              <h4 class="font-bold mb-2">WhatsApp Hijacking</h4>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                Scammers pose as contacts or reps to trick you into sharing your 6-digit verification code. This results in immediate account takeover and identity theft across your contact list.
+              </p>
+            </div>
+
+            <!-- Digital Lending & Sextortion -->
+            <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 hover:translate-y-[-4px] transition-transform">
+              <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-700 mb-4">
+                <span class="material-symbols-outlined" data-icon="warning">warning</span>
+              </div>
+              <h4 class="font-bold mb-2">Lending & Extortion</h4>
+              <p class="text-xs text-on-surface-variant leading-relaxed">
+                From fake high-return investment apps to "Sextortion" video call traps on WhatsApp, these schemes use financial greed or emotional blackmail to extort victims in the Ghanaian context.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ------------------------- 3. Phishing Overview ------------------------- -->
+        <section class="scroll-mt-24" id="phishing-overview">
+          <div class="flex flex-col md:flex-row  mb-12 gap-12 items-center">
+            <div class="flex-1">
+              <h2 class="text-3xl font-bold mb-6">What is Phishing?</h2>
+              <p class="text-on-surface-variant leading-relaxed mb-6">
+                Phishing is a deceptive technique that uses digital
+                communications—email, text, or social media—to trick individuals
+                into revealing sensitive information or performing actions that
+                compromise security.
+              </p>
+              <div class="space-y-4">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shrink-0 mt-1"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[14px]"
+                      data-icon="check"
+                      >check</span
+                    >
+                  </div>
+                  <p class="text-sm">
+                    It targets <span class="font-bold">people</span>, not just
+                    devices.
+                  </p>
+                </div>
+                <div class="flex items-start gap-4">
+                  <div
+                    class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shrink-0 mt-1"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[14px]"
+                      data-icon="check"
+                      >check</span
+                    >
+                  </div>
+                  <p class="text-sm">
+                    It mimics <span class="font-bold">trusted brands</span> to
+                    create a false sense of security.
+                  </p>
+                </div>
+                <div class="flex items-start gap-4">
+                  <div
+                    class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shrink-0 mt-1"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[14px]"
+                      data-icon="check"
+                      >check</span
+                    >
+                  </div>
+                  <p class="text-sm">
+                    It often includes a
+                    <span class="font-bold">malicious payload</span> like a link
+                    or attachment.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Scenario Illustration -->
+            <div class="flex-1 w-full">
+              <!-- The Outer Box (The Frame) -->
+              <div
+                class="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-100 dark:bg-slate-800 p-6"
+              >
+                <img
+                  alt="Scammer in a mask pretending to be a trusted bank representative..."
+                  class="w-full h-[300px] object-contain"
+                  data-alt="Scammer in a mask pretending to be a trusted bank representative..."
+                  src="assets/images/whatisphishing.png"
+                />
+                <!-- Overlay removed or adjusted to not cover the padding -->
+                <div
+                  class="absolute inset-0 bg-primary/5 pointer-events-none"
+                ></div>
+              </div>
+            </div>
+
+
+          </div>
+
+             <!-- THE PHISHING SPECTRUM: EVERY KNOWN METHOD   -->
+<div class="bg-surface-container-low dark:bg-slate-900/50 rounded-3xl p-8 grid md:grid-cols-2 gap-12 mt-8">
+  <!-- LEFT COLUMN: Primary & Targeted Threats -->
+  <div>
+    <h4 class="font-bold text-lg mb-6 flex items-center gap-2 text-primary">
+      <span class="material-symbols-outlined" data-icon="hub">hub</span>
+      Primary & Targeted Threats
+    </h4>
+    <div class="space-y-6">
+      <div>
+        <p class="text-sm font-bold text-on-surface mb-1">Common Vectors</p>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          <span class="font-semibold text-primary">Email, Smishing (SMS), & Vishing:</span> The foundation of most attacks. Includes mass-scale deception and AI-driven voice cloning.
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-bold text-on-surface mb-1">High-Value Targeting</p>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          <span class="font-semibold text-primary">Spear Phishing & Whaling:</span> Precision attacks targeting individuals or CEOs using stolen personal data to build fake intimacy.
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-bold text-on-surface mb-1">Operational Deception</p>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          <span class="font-semibold text-primary">BEC & Clone Phishing:</span> Impersonating colleagues or duplicating legitimate past emails to redirect payments or sensitive files.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Technical & Stealth Tactics -->
+  <div>
+    <h4 class="font-bold text-lg mb-6 flex items-center gap-2 text-primary">
+      <span class="material-symbols-outlined" data-icon="fingerprint">fingerprint</span>
+      Technical & Stealth Tactics
+    </h4>
+    <div class="space-y-6">
+      <div>
+        <p class="text-sm font-bold text-on-surface mb-1">Security Bypass</p>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          <span class="font-semibold text-primary">AiTM & MFA Fatigue:</span> Sophisticated session hijacking that steals login cookies to bypass Multi-Factor Authentication entirely.
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-bold text-on-surface mb-1">Infrastructure Hijacking</p>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          <span class="font-semibold text-primary">Quishing, Pharming, & Evil Twins:</span> Using malicious QR codes, DNS poisoning, or fake Wi-Fi to intercept data at the source.
+        </p>
+      </div>
+      <div>
+        <p class="text-sm font-bold text-on-surface mb-1">Modern Psychological Shifts</p>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          <span class="font-semibold text-primary">Sycophancy & Angler Attacks:</span> AI-flattery or fake social media support agents used to exploit human ego and trust.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </section>
+
+        <!-- ------------------------- 4. Human Factor ------------------------- -->
+<section class="scroll-mt-24" id="human-factor">
+  <div class="bg-slate-950 rounded-[2rem] p-8 md:p-12 text-white relative overflow-hidden border border-white/5">
+
+    <!-- Background Decoration -->
+    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[100px] -z-0"></div>
+
+    <div class="relative z-10 grid lg:grid-cols-3 gap-12 items-start">
+
+      <!-- LEFT: The Hook & Triggers -->
+      <div class="lg:col-span-2">
+        <h2 class="text-3xl font-bold mb-6">The Human Factor</h2>
+        <p class="text-slate-300 leading-relaxed mb-8">
+          Attackers don't look for software bugs; they look for <span class="text-blue-400 font-bold uppercase tracking-wider">Psychological "Hooks"</span>.
+          They exploit universal human emotions to bypass technical firewalls.
+        </p>
+
+        <!-- Triggers Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-12">
+          <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+            <span class="material-symbols-outlined text-orange-400 mb-2">alarm</span>
+            <h4 class="font-bold text-xs uppercase tracking-widest mb-1">Urgency</h4>
+            <p class="text-[10px] text-slate-400 leading-tight">"Action required in 30 mins."</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+            <span class="material-symbols-outlined text-red-400 mb-2">warning</span>
+            <h4 class="font-bold text-xs uppercase tracking-widest mb-1">Fear</h4>
+            <p class="text-[10px] text-slate-400 leading-tight">"Unauthorized login detected."</p>
+          </div>
+          <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+            <span class="material-symbols-outlined text-emerald-400 mb-2">payments</span>
+            <h4 class="font-bold text-xs uppercase tracking-widest mb-1">Greed</h4>
+            <p class="text-[10px] text-slate-400 leading-tight">"You've won a $500 gift card."</p>
+          </div>
+        </div>
+
+        <!-- NEW: The Blind Spots (Biases) -->
+        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-blue-400">visibility_off</span>
+          The Blind Spots (Biases)
+        </h3>
+        <div class="grid sm:grid-cols-3 gap-6">
+          <div>
+            <p class="font-bold text-sm text-blue-400 mb-1">Authority</p>
+            <p class="text-xs text-slate-400">"The CEO told me to do it, I have to comply."</p>
+          </div>
+          <div>
+            <p class="font-bold text-sm text-blue-400 mb-1">Optimism</p>
+            <p class="text-xs text-slate-400">"I’m too smart to be hacked. It won't be me."</p>
+          </div>
+          <div>
+            <p class="font-bold text-sm text-blue-400 mb-1">Social Proof</p>
+            <p class="text-xs text-slate-400">"Everyone else in the group is clicking it."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: The Hard Stats -->
+      <div class="bg-white/5 rounded-3xl p-8 border border-white/10 flex flex-col gap-8 justify-center">
+        <div class="text-center">
+          <p class="text-5xl font-bold text-blue-400 mb-1">21s</p>
+          <p class="text-[10px] uppercase tracking-widest opacity-60">Median time to click</p>
+        </div>
+        <div class="h-px bg-white/10 w-full"></div>
+        <div class="text-center">
+          <p class="text-5xl font-bold text-emerald-400 mb-1">74%</p>
+          <p class="text-[10px] uppercase tracking-widest opacity-60">Involved in all breaches</p>
+        </div>
+        <div class="h-px bg-white/10 w-full"></div>
+        <div class="text-center">
+          <p class="text-5xl font-bold text-red-400 mb-1">$4M</p>
+          <p class="text-[10px] uppercase tracking-widest opacity-60">Avg. Cost of a Breach</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Final Call to Action Bar -->
+    <div class="mt-12 py-4 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="text-sm font-bold tracking-widest uppercase">
+        <span class="text-red-400">NEVER CLICK</span> • <span class="text-slate-400">DON’T REPLY</span> • <span class="text-emerald-400">ALWAYS REPORT</span>
+      </p>
+      <div class="text-[10px] text-slate-500 italic">
+        *Source: Global Cybersecurity Trends & CSA Ghana
+      </div>
+    </div>
+  </div>
+</section>
+
+
+        <!-- ------------------------- 5. Defense Strategies ------------------------- -->
+
+<section class="scroll-mt-24" id="defense-strategies">
+  <div class="mb-12">
+    <h2 class="text-3xl font-bold text-on-surface mb-2">Active Defense Strategies</h2>
+    <p class="text-on-surface-variant text-sm">Spotting inconsistencies before interacting.</p>
+  </div>
+
+  <div class="space-y-12">
+
+    <!-- 5.1 SURFACE-LEVEL DETECTION GRID -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Email Card -->
+      <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/10 shadow-sm hover:border-primary/30 transition-colors">
+        <span class="material-symbols-outlined text-primary mb-3">mail</span>
+        <h4 class="font-bold text-sm mb-3 uppercase tracking-tight">Phishing Emails</h4>
+        <ul class="text-[11px] space-y-2 text-on-surface-variant">
+          <li>• <span class="font-bold">Identity:</span> Look beyond the name; check actual email domain.</li>
+          <li>• <span class="font-bold">Tone:</span> Watch for "Act Now" or fake urgency.</li>
+          <li>• <span class="font-bold">Links:</span> Hover before clicking. Does it match the company?</li>
+        </ul>
+      </div>
+
+      <!-- Website Card -->
+      <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/10 shadow-sm hover:border-primary/30 transition-colors">
+        <span class="material-symbols-outlined text-primary mb-3">language</span>
+        <h4 class="font-bold text-sm mb-3 uppercase tracking-tight">Websites</h4>
+        <ul class="text-[11px] space-y-2 text-on-surface-variant">
+          <li>• <span class="font-bold">URL:</span> Look for extra words (e.g., secure-bank-login.com).</li>
+          <li>• <span class="font-bold">HTTPS:</span> The lock icon only means encrypted, not safe.</li>
+          <li>• <span class="font-bold">Context:</span> Did you type the URL or follow a link?</li>
+        </ul>
+      </div>
+
+      <!-- Smishing Card -->
+      <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/10 shadow-sm hover:border-primary/30 transition-colors">
+        <span class="material-symbols-outlined text-primary mb-3">sms</span>
+        <h4 class="font-bold text-sm mb-3 uppercase tracking-tight">Smishing (SMS)</h4>
+        <ul class="text-[11px] space-y-2 text-on-surface-variant">
+          <li>• <span class="font-bold">Sender:</span> Random numbers or slightly altered names.</li>
+          <li>• <span class="font-bold">Links:</span> Avoid shortened URLs (bit.ly, tinyurl).</li>
+          <li>• <span class="font-bold">Requests:</span> Banks rarely ask for OTPs via text.</li>
+        </ul>
+      </div>
+
+      <!-- Vishing Card -->
+      <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/10 shadow-sm hover:border-primary/30 transition-colors">
+        <span class="material-symbols-outlined text-primary mb-3">call</span>
+        <h4 class="font-bold text-sm mb-3 uppercase tracking-tight">Vishing (Voice)</h4>
+        <ul class="text-[11px] space-y-2 text-on-surface-variant">
+          <li>• <span class="font-bold">Behavior:</span> High pressure and rushing you.</li>
+          <li>• <span class="font-bold">Secrets:</span> Never share PINs or OTPs over a call.</li>
+          <li>• <span class="font-bold">Verify:</span> Hang up and call the official bank number.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 5.2 REAL VS FAKE COMPARISON (Existing Code Preserved) -->
+    <div class="bg-surface-container-lowest rounded-3xl overflow-hidden border border-outline-variant/10 shadow-sm">
+      <div class="grid md:grid-cols-2">
+        <div class="p-8 border-r border-outline-variant/10">
+          <div class="flex items-center gap-2 text-green-600 font-bold mb-6">
+            <span class="material-symbols-outlined">check_circle</span>
+            The Real Alert
+          </div>
+          <div class="bg-surface-container-low p-4 rounded-lg space-y-2 font-mono text-[11px]">
+            <p class="text-slate-500">From: google-security@accounts.google.com</p>
+            <p class="font-bold text-on-surface">Security Alert: Your password was changed.</p>
+          </div>
+          <p class="text-xs text-on-surface-variant mt-4">Verified sender domain. No generic salutations.</p>
+        </div>
+        <div class="p-8 bg-red-50/50 dark:bg-red-950/10">
+          <div class="flex items-center gap-2 text-red-600 font-bold mb-6">
+            <span class="material-symbols-outlined">cancel</span>
+            The Phish
+          </div>
+          <div class="bg-surface-container-low p-4 rounded-lg space-y-2 font-mono text-[11px]">
+            <p class="text-red-500 font-bold">From: support-google@sec-updates.net</p>
+            <p class="font-bold text-on-surface">URGENT: Click fast to unlock account!</p>
+          </div>
+          <p class="text-xs text-on-surface-variant mt-4">Mismatched domain and forced urgency.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5.3 TECHNICAL PROTOCOLS, AI & INDUSTRY DEFENSE -->
+<div class="grid md:grid-cols-3 gap-6">
+  <!-- Protocol Card -->
+  <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-outline-variant/10 flex flex-col justify-between">
+    <div>
+      <h4 class="font-bold text-primary mb-2 uppercase tracking-tight text-sm">Header & Protocol Analysis</h4>
+      <p class="text-xs text-on-surface-variant leading-relaxed">
+        SPF, DKIM, and DMARC verify sender identity and ensure the message wasn't altered in transit.
+      </p>
+    </div>
+    <div class="mt-4 flex gap-2">
+      <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[9px] font-bold rounded uppercase">Pass = Authentic</span>
+      <span class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-[9px] font-bold rounded uppercase">Fail = Reject</span>
+    </div>
+  </div>
+
+  <!-- AI Defense Card -->
+  <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-outline-variant/10 flex flex-col justify-between">
+    <div>
+      <h4 class="font-bold text-primary mb-2 uppercase tracking-tight text-sm">AI & Machine Learning</h4>
+      <p class="text-xs text-on-surface-variant leading-relaxed">
+        Modern systems use AI to scan for "Zero-Day" patterns and linguistic anomalies that bypass traditional filters.
+      </p>
+    </div>
+    <div class="mt-4">
+      <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[9px] font-bold rounded uppercase">AI Shield Active</span>
+    </div>
+  </div>
+
+  <!-- Industry Card -->
+  <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-outline-variant/10 flex flex-col justify-between">
+    <div>
+      <h4 class="font-bold text-primary mb-2 uppercase tracking-tight text-sm">Industry-Specific Strategy</h4>
+      <p class="text-xs text-on-surface-variant leading-relaxed">
+        Multi-check verification and mandatory MFA (Multi-Factor Auth) remain the strongest organizational defenses.
+      </p>
+    </div>
+    <div class="mt-4">
+      <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400 text-[9px] font-bold rounded uppercase">Defense-In-Depth</span>
+    </div>
+  </div>
+</div>
+
+
+    <!-- 5.4 THE UNIVERSAL RULE (Banner) -->
+    <div class="bg-primary text-white p-8 rounded-3xl flex flex-col md:flex-row items-center gap-8 border border-white/10">
+      <span class="material-symbols-outlined text-6xl opacity-50">verified</span>
+      <div>
+        <h3 class="text-xl font-bold mb-2">The Universal Rule: Pause + Verify</h3>
+        <p class="text-white/80 text-sm leading-relaxed mb-4">
+          Never use the contact details provided in an unsolicited message. Manually type the URL or call the official number you already know.
+        </p>
+        <p class="text-xs font-bold tracking-widest uppercase text-blue-200">
+          Be Skeptical • Slow Down • Avoid Links • Use MFA
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+        <!-- ------------------------- 6. Legal / Law ------------------------- -->
+
+<section class="scroll-mt-24" id="legal-law">
+  <div class="flex items-center gap-4 mb-8">
+    <div class="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-white shadow-lg shadow-secondary/20">
+      <span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+    </div>
+    <div>
+      <h2 class="text-3xl font-bold text-on-surface">Legal & Security Rights</h2>
+      <p class="text-on-surface-variant text-sm">Empowering You with Legal Knowledge</p>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <!-- 6.1 THE LEGAL SPLIT: GLOBAL VS GHANA -->
+    <div class="bg-surface-container-low dark:bg-slate-900/50 rounded-3xl p-8 grid md:grid-cols-2 gap-12 relative overflow-hidden">
+      <!-- Vertical Separator (Desktop Only) -->
+      <div class="hidden md:block absolute left-1/2 top-12 bottom-12 w-px bg-outline-variant/30"></div>
+
+      <!-- LEFT: International Standards -->
+      <div>
+        <h4 class="font-bold text-lg mb-4 flex items-center gap-2 text-primary">
+          <span class="material-symbols-outlined">public</span>
+          International Rights (GDPR/CCPA)
+        </h4>
+        <p class="text-sm text-on-surface-variant leading-relaxed">
+          The <span class="font-bold">GDPR (Europe)</span> and <span class="font-bold">CCPA (USA)</span> set the global gold standard. They grant you the <span class="italic">"Right to be Forgotten"</span> and mandate that companies must notify you of a data breach within 72 hours. These laws ensure your data is treated as your personal property.
+        </p>
+      </div>
+
+      <!-- RIGHT: Ghanaian & African Context -->
+      <div>
+        <h4 class="font-bold text-lg mb-4 flex items-center gap-2 text-primary">
+          <span class="material-symbols-outlined">flag</span>
+          Ghana Data Protection Act (Act 843)
+        </h4>
+        <p class="text-sm text-on-surface-variant leading-relaxed">
+          Ghana's <span class="font-bold">Act 843</span> and the <span class="font-bold">Cybersecurity Act (Act 1038)</span> provide a local safety net. It is illegal for institutions to leak your MoMo details or personal data. You have the legal right to demand how your data is used and to hold negligent organizations accountable.
+        </p>
+      </div>
+    </div>
+
+    <!-- 6.2 GRC: INDIVIDUAL VS ORGANIZATIONAL RESPONSIBILITY -->
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Individual Perspective -->
+      <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-outline-variant/10 shadow-sm">
+        <h4 class="font-bold text-lg mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-blue-500">person_shield</span>
+          For You (Individual)
+        </h4>
+        <ul class="text-xs text-on-surface-variant space-y-3">
+          <li class="flex gap-2">
+            <span class="text-blue-500 font-bold">✔</span>
+            <span><span class="font-bold text-on-surface dark:text-white">Reporting is a Right:</span> You are protected when reporting fraud to the CSA via <span class="font-bold text-primary">292</span>.</span>
+          </li>
+          <li class="flex gap-2">
+            <span class="text-blue-500 font-bold">✔</span>
+            <span><span class="font-bold text-on-surface dark:text-white">Identity Protection:</span> Victims of "Sakawa" or Sextortion have the right to privacy and legal support.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Organizational Perspective -->
+      <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-outline-variant/10 shadow-sm">
+        <h4 class="font-bold text-lg mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-emerald-500">corporate_fare</span>
+          For Business (GRC)
+        </h4>
+        <ul class="text-xs text-on-surface-variant space-y-3">
+          <li class="flex gap-2">
+            <span class="text-emerald-500 font-bold">✔</span>
+            <span><span class="font-bold text-on-surface dark:text-white">Governance & Compliance:</span> Companies must appoint a Data Protection Officer (DPO) under Ghana law.</span>
+          </li>
+          <li class="flex gap-2">
+            <span class="text-emerald-500 font-bold">✔</span>
+            <span><span class="font-bold text-on-surface dark:text-white">Liability:</span> Organizations are legally liable for financial losses caused by poor employee phishing training.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+        <!-- ------------------------- 7. FAQ  ------------------------- -->
+        <section class="scroll-mt-24" id="faq">
+          <h2 class="text-3xl font-bold mb-10 text-center">
+            Frequently Asked Questions
+          </h2>
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Basics -->
+            <div class="space-y-4">
+              <h4
+                class="text-xs font-bold uppercase tracking-widest text-primary mb-6"
+              >
+                Basics &amp; Psychology
+              </h4>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  Is phishing only done via email?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    No. Phishing can happen via SMS (Smishing), phone calls
+                    (Vishing), and even QR codes (Quishing).
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  Why do they create a sense of urgency?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    Urgency shuts down the logical brain and triggers an
+                    emotional response, making you more likely to skip
+                    verification steps.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  Can an email really hack my computer?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    The email itself usually can't, but the links or attachments
+                    it contains can execute malicious scripts once clicked.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  What is 'Social Engineering'?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    It's the psychological manipulation of people into
+                    performing actions or divulging confidential information they normally won't share with others.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  Who are the primary targets?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    Everyone. From entry-level staff to C-suite executives,
+                    attackers look for any way into an organization/system/account.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- Protection -->
+            <div class="space-y-4">
+              <h4
+                class="text-xs font-bold uppercase tracking-widest text-primary mb-6"
+              >
+                Protection &amp; Awareness
+              </h4>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  Does 2FA stop all phishing?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    It stops most, but sophisticated 'Man-in-the-Middle' attacks
+                    can still capture 2FA codes in real-time.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  What should I do if I clicked a link?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    Immediately disconnect from the internet and notify your
+                    IT/Security department. Don't be embarrassed—acting fast is
+                    key.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  How can I tell a link is fake?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    Hover your mouse over the link without clicking. The actual
+                    destination URL will appear in the corner of your browser.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  Is 'HTTPS' always safe?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    No. HTTPS only means the connection is encrypted, not that
+                    the site owner is trustworthy. Attackers often use valid SSL
+                    certificates.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-4 accordion-item"
+              >
+                <button
+                  class="w-full flex justify-between items-center text-left font-bold text-sm accordion-trigger"
+                >
+                  How often should I train?
+                  <span
+                    class="material-symbols-outlined"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="accordion-content hidden">
+                  <p class="mt-2 text-xs text-on-surface-variant">
+                    Continuous, bite-sized learning is best. Security is a
+                    habit, not a one-time event.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- 5. FOOTER -->
+    <!-- ========================================================================= -->
+    <footer
+      class="bg-slate-50 dark:bg-slate-950 w-full py-12 border-t border-slate-200/50 dark:border-slate-800/50"
+    >
+      <div
+        class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-4"
+      >
+        <div class="flex flex-col items-center md:items-start gap-2">
+          <span
+            class="font-manrope font-semibold text-slate-700 dark:text-slate-300"
+            >Human Firewall</span
+          >
+          <p class="font-label text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">
+  © 2026 PASAD &nbsp;•&nbsp; G2
+  <span class="mx-3 font-bold opacity-50">|</span>
+  Protecting the Digital Community.
+</p>
+
+        </div>
+        <nav class="flex gap-6">
+          <a
+            class="font-inter text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            href="#"
+            >Privacy Policy</a
+          >
+          <a
+            class="font-inter text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            href="#"
+            >Terms of Service</a
+          >
+          <a
+            class="font-inter text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            href="#"
+            >Security Disclosure</a
+          >
+          <a
+            class="font-inter text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            href="#"
+            >Support</a
+          >
+        </nav>
+      </div>
+    </footer>
+     <!-- ------------------------- JavaScript — loaded last for performance ------------------------- -->
+    <script src="assets/script.js"></script>
+  </body>
+</html>

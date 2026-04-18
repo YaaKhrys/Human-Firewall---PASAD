@@ -1,0 +1,553 @@
+<!doctype html>
+
+<!--
+  =============================================================================
+  FILE STRUCTURE OVERVIEW
+  =============================================================================
+  Project:  Human Firewall — Phishing Awareness Simulator
+  File:     results.html
+  Role:     Results Dashboard — displays post-simulation score, risk level,
+            module details, key lessons, and recommendations.
+
+  Related Files:
+    - index.html      → Landing page
+    - education.html  → Education Hub
+    - simulator.html  → Scenario Engine (navigates here after last scenario)
+    - styles.css      → Custom non-Tailwind styles
+    - script.js       → initResultsDashboard(), initRestartButton() logic
+  =============================================================================
+-->
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Results | Human Firewall</title>
+
+    <!-- ========================================================================= -->
+    <!-- 0. THEME BLOCKING SCRIPT (Prevents White Flash) -->
+    <!-- ========================================================================= -->
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
+
+    <!-- ========================================================================= -->
+    <!-- FONTS, ICONS, & FAVICON -->
+    <!-- ========================================================================= -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tab Icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+
+    <!-- Mobile/Bookmark Icon (Higher Res) -->
+    <link rel="apple-touch-icon" href="assets/images/favicon.png" />
+
+    <!-- ========================================================================= -->
+    <!-- TAILWIND CSS & CONFIGURATION -->
+    <!-- ========================================================================= -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#e0e3e5",
+              "on-tertiary-fixed-variant": "#723600",
+              "on-tertiary-fixed": "#311400",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f2f4f6",
+              "primary-container": "#2170e4",
+              "on-surface": "#191c1e",
+              "on-primary-container": "#fefcff",
+              "surface-dim": "#d8dadc",
+              "primary-fixed-dim": "#adc6ff",
+              "on-primary-fixed-variant": "#004395",
+              "on-background": "#191c1e",
+              "surface-tint": "#005ac2",
+              "tertiary-fixed-dim": "#ffb786",
+              outline: "#727785",
+              "on-secondary-container": "#405682",
+              "on-surface-variant": "#424754",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#b6ccff",
+              error: "#ba1a1a",
+              surface: "#f7f9fb",
+              "tertiary-fixed": "#ffdcc6",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#2d3133",
+              "on-secondary-fixed": "#001a42",
+              "inverse-primary": "#adc6ff",
+              "on-error": "#ffffff",
+              "surface-container": "#eceef0",
+              "surface-bright": "#f7f9fb",
+              tertiary: "#924700",
+              "on-tertiary-container": "#fffbff",
+              "surface-variant": "#e0e3e5",
+              secondary: "#495e8a",
+              "outline-variant": "#c2c6d6",
+              "secondary-fixed-dim": "#b1c6f9",
+              "inverse-on-surface": "#eff1f3",
+              primary: "#0058be",
+              "primary-fixed": "#d8e2ff",
+              "tertiary-container": "#b75b00",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "on-primary-fixed": "#001a42",
+              "on-secondary-fixed-variant": "#304671",
+              "secondary-fixed": "#d8e2ff",
+              background: "#f7f9fb",
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <!-- ========================================================================= -->
+  <!-- CUSTOM STYLES -->
+  <!-- ========================================================================= -->
+  <!-- CSS Stylesheet-->
+  <link rel="stylesheet" href="assets/style.css" />
+
+  <body
+    class="bg-surface font-body text-on-surface antialiased dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300"
+  >
+    <!-- ========================================================================= -->
+    <!-- 1. NAVIGATION BAR (Global) -->
+    <!-- ========================================================================= -->
+    <!-- TopNavBar -->
+    <nav
+      class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200/50 dark:border-slate-800/50"
+    >
+      <div
+        class="flex justify-between items-center w-full px-6 py-4 mx-auto max-w-7xl"
+      >
+        <!-- Left Section: Logo & Brand -->
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="flex items-center gap-3">
+            <img
+              src="assets/images/logo.png"
+              alt="Logo"
+              class="w-7 h-7 object-contain"
+            />
+            <span
+              class="text-xl font-headline font-bold tracking-tight text-slate-900 dark:text-white whitespace-nowrap"
+            >
+              Human Firewall
+            </span>
+          </a>
+        </div>
+
+        <!-- Center Section: Navigation Links -->
+        <div class="hidden md:flex items-center gap-8">
+          <a
+            class="font-headline text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200"
+            href="education.html"
+          >
+            Learning Hub
+          </a>
+          <a
+            class="font-headline text-sm font-medium text-blue-600 border-b-2 border-blue-600 pb-1"
+            href="simulator.html"
+          >
+            Simulator
+          </a>
+          <a
+            class="font-headline text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200"
+            href="resources.html"
+          >
+            Resources
+          </a>
+        </div>
+
+        <!-- Right Section: Theme, Notifications & Profile -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <!-- Theme Toggle -->
+          <button
+            id="theme-toggle"
+            class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-all duration-200"
+          >
+            <span class="material-symbols-outlined block">dark_mode</span>
+          </button>
+
+          <!-- Notifications -->
+          <button
+            class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-all duration-200"
+          >
+            <span class="material-symbols-outlined block">notifications</span>
+          </button>
+
+          <!-- Profile Image -->
+          <div
+            class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden border-2 border-primary/20 cursor-pointer hover:ring-2 hover:ring-primary/30 transition-all duration-200"
+          >
+            <img
+              alt="User profile"
+              class="w-full h-full object-cover"
+              src="assets/images/undraw_pic-profile_nr49.png"
+            />
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- =========================================================
+            2.EMPTY STATE (No Session Data)
+             ========================================================= -->
+    <main class="pt-24 pb-16 px-6 max-w-7xl mx-auto" id="score-display">
+      <!-- Empty State (Hidden by default, shown by JS if no session data exists) -->
+      <div id="empty-state" class="hidden text-center py-20">
+        <span class="material-symbols-outlined text-6xl text-outline mb-4"
+          >analytics</span
+        >
+        <h2 class="text-2xl font-bold font-headline mb-2">
+          No Session Data Found
+        </h2>
+        <p class="text-on-surface-variant mb-6">
+          Please complete a simulation to view your results.
+        </p>
+        <a
+          href="simulator.html"
+          class="bg-primary text-on-primary px-8 py-3 rounded-full font-bold"
+          >Start Simulation</a
+        >
+      </div>
+
+      <!-- =========================================================
+             3. DASHBOARD
+             ========================================================= -->
+      <div id="results-content">
+        <header class="mb-12">
+          <h1
+            class="font-headline text-4xl font-extrabold tracking-tight mb-2 dark:text-white"
+          >
+            Well done on finishing
+          </h1>
+          <p
+            class="text-on-surface-variant dark:text-slate-400 font-body body-sm"
+          >
+            Here is a look at how you handled the challenges.
+          </p>
+        </header>
+        <!-- Main Dashboard Bento Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- ------------------------- Left Column: Primary Stats ------------------------- -->
+          <div class="lg:col-span-4 space-y-6">
+            <!-- Score Card -->
+            <div
+              class="bg-surface-container-lowest dark:bg-slate-900 p-8 rounded-xl shadow-[0_40px_40px_-15px_rgba(25,28,30,0.04)] relative overflow-hidden group"
+            >
+              <div class="relative z-10">
+                <p
+                  class="font-label text-xs uppercase tracking-widest text-on-surface-variant dark:text-slate-400 mb-1"
+                >
+                  Your Results
+                </p>
+                <div class="flex items-baseline gap-1 mb-6">
+                  <span
+                    id="score-correct"
+                    class="font-headline text-6xl font-extrabold text-primary dark:text-blue-400"
+                    >2</span
+                  >
+                  <span
+                    id="score-total"
+                    class="font-headline text-3xl text-on-surface-variant dark:text-slate-400"
+                    >/ 3 Correct</span
+                  >
+                </div>
+                <!-- Risk Level Indicator -->
+                <div
+                  class="flex items-center gap-3 p-4 bg-tertiary-container/10 dark:bg-orange-900/20 border-l-4 border-tertiary-container dark:border-orange-500 rounded-r-lg"
+                >
+                  <span
+                    class="material-symbols-outlined text-tertiary-fixed-dim"
+                    style="font-variation-settings: &quot;FILL&quot; 1"
+                    >warning</span
+                  >
+                  <div>
+                    <p
+                      class="font-label text-xs font-bold text-on-tertiary-fixed dark:text-orange-200"
+                    >
+                      Room for Improvement
+                    </p>
+                    <p
+                      class="text-xs text-on-tertiary-fixed-variant dark:text-orange-300"
+                    >
+                      A few small details almost caught you out.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Simulation Info Card -->
+            <div
+              class="bg-surface-container-low dark:bg-slate-900/50 p-6 rounded-xl"
+            >
+              <h3
+                class="font-headline font-semibold text-lg mb-4 dark:text-white"
+              >
+                Session Overview
+              </h3>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span
+                    class="text-on-surface-variant dark:text-slate-400 text-sm"
+                    >Difficulty</span
+                  >
+                  <span class="text-sm font-semibold dark:text-slate-200"
+                    >Intermediate</span
+                  >
+                </div>
+                <div class="flex justify-between items-center">
+                  <span
+                    class="text-on-surface-variant dark:text-slate-400 text-sm"
+                    >Time Taken</span
+                  >
+                  <span
+                    id="time-taken"
+                    class="text-sm font-semibold dark:text-slate-200"
+                    >04:22</span
+                  >
+                </div>
+                <div class="flex justify-between items-center">
+                  <span
+                    class="text-on-surface-variant dark:text-slate-400 text-sm"
+                    >Success Rate</span
+                  >
+                  <span
+                    id="accuracy-rate"
+                    class="text-sm font-semibold dark:text-slate-200"
+                    >66.7%</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /Left Column -->
+
+          <!-- ------------------------- RIGHT COLUMN: Insights, Lessons, Recommendations ------------------------- -->
+          <div class="lg:col-span-8 space-y-6">
+            <!-- Bento Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Key Lessons Card -->
+              <div
+                class="bg-surface-container-lowest dark:bg-slate-900 p-8 rounded-xl shadow-[0_40px_40px_-15px_rgba(25,28,30,0.04)]"
+              >
+                <div class="flex items-center gap-3 mb-6">
+                  <div
+                    class="w-10 h-10 rounded-full bg-primary-fixed dark:bg-blue-900/30 flex items-center justify-center text-primary dark:text-blue-400"
+                  >
+                    <span class="material-symbols-outlined">psychology</span>
+                  </div>
+                  <h2 class="font-headline text-xl font-bold dark:text-white">
+                    What we learned
+                  </h2>
+                </div>
+                <ul id="lessons-list" class="space-y-6">
+                  <li class="flex gap-4">
+                    <span
+                      class="text-primary dark:text-blue-400 font-bold text-lg leading-tight"
+                      >01</span
+                    >
+                    <p
+                      class="text-on-surface-variant dark:text-slate-400 text-sm leading-relaxed"
+                    >
+                      Names can be faked; always take a second look at the
+                      actual email address before clicking.
+                    </p>
+                  </li>
+                  <li class="flex gap-4">
+                    <span
+                      class="text-primary dark:text-blue-400 font-bold text-lg leading-tight"
+                      >02</span
+                    >
+                    <p
+                      class="text-on-surface-variant dark:text-slate-400 text-sm leading-relaxed"
+                    >
+                      If an email makes you feel rushed or panicked, it's often
+                      a sign to slow down and check twice.
+                    </p>
+                  </li>
+                  <li class="flex gap-4">
+                    <span
+                      class="text-primary dark:text-blue-400 font-bold text-lg leading-tight"
+                      >03</span
+                    >
+                    <p
+                      class="text-on-surface-variant dark:text-slate-400 text-sm leading-relaxed"
+                    >
+                      Official teams usually won't ask you to click a link to
+                      "verify" your secret password.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- ------------------------- Recommendations Card ------------------------- -->
+              <div
+                class="bg-surface-container-lowest dark:bg-slate-900 p-8 rounded-xl shadow-[0_40px_40px_-15px_rgba(25,28,30,0.04)]"
+              >
+                <div class="flex items-center gap-3 mb-6">
+                  <div
+                    class="w-10 h-10 rounded-full bg-secondary-container dark:bg-indigo-900/30 flex items-center justify-center text-secondary dark:text-indigo-400"
+                  >
+                    <span class="material-symbols-outlined"
+                      >volunteer_activism</span
+                    >
+                  </div>
+                  <h2 class="font-headline text-xl font-bold dark:text-white">
+                    Helpful Next Steps
+                  </h2>
+                </div>
+                <ul id="recommendations-list" class="space-y-4">
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="material-symbols-outlined text-primary dark:text-blue-400 text-sm mt-1"
+                      >check_circle</span
+                    >
+                    <p
+                      class="text-on-surface-variant dark:text-slate-400 text-sm"
+                    >
+                      Practice how to spot fake email headers.
+                    </p>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="material-symbols-outlined text-primary dark:text-blue-400 text-sm mt-1"
+                      >check_circle</span
+                    >
+                    <p
+                      class="text-on-surface-variant dark:text-slate-400 text-sm"
+                    >
+                      Set up your extra security (MFA) step.
+                    </p>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <span
+                      class="material-symbols-outlined text-primary dark:text-blue-400 text-sm mt-1"
+                      >check_circle</span
+                    >
+                    <p
+                      class="text-on-surface-variant dark:text-slate-400 text-sm"
+                    >
+                      Report the "Invoice" scam to the IT team.
+                    </p>
+                  </li>
+                </ul>
+                <div
+                  class="mt-8 pt-8 border-t border-outline-variant/15 dark:border-slate-800"
+                >
+                  <p
+                    class="text-xs text-on-surface-variant dark:text-slate-500 italic leading-relaxed"
+                  >
+                    "Security isn't about being perfect, it's about knowing what
+                    to do when something feels wrong."
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- =====================================================
+                     4. ACTION BUTTONS
+                     ===================================================== -->
+            <!-- Action Buttons Container -->
+            <div
+              class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-4"
+            >
+              <a
+                class="w-full sm:w-auto px-8 py-3 rounded-full font-label text-sm font-semibold text-primary dark:text-blue-400 border border-outline-variant/15 dark:border-slate-800 hover:bg-surface-container-high dark:hover:bg-slate-800 transition-all duration-200 text-center"
+                href="education.html"
+              >
+                Return to Lessons
+              </a>
+              <a
+                href="simulator.html"
+                id="retry-btn"
+                class="w-full sm:w-auto editorial-gradient px-10 py-3 rounded-full font-label text-sm font-semibold text-white shadow-lg hover:opacity-90 transition-all duration-200 text-center inline-block"
+              >
+                Try Challenge Again
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- 5. FOOTER -->
+    <!-- ========================================================================= -->
+    <footer
+      class="bg-slate-50 dark:bg-slate-950 py-12 border-t dark:border-slate-900"
+    >
+      <div
+        class="max-w-7xl px-8 flex flex-col md:flex-row justify-between items-center gap-8 mx-auto"
+      >
+        <div class="flex flex-col gap-2">
+          <span
+            class="font-headline font-semibold text-slate-400 dark:text-slate-600"
+            >Human Firewall</span
+          >
+          <p
+            class="font-label text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400"
+          >
+            © 2026 PASAD &nbsp;•&nbsp; G2
+            <span class="mx-3 font-bold opacity-50">|</span>
+            Protecting the Digital Community.
+          </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-8">
+          <a
+            class="font-label text-xs uppercase tracking-widest text-slate-500 hover:text-blue-600 underline-offset-4 underline transition-all"
+            href="#"
+            >Safety Policy</a
+          >
+          <a
+            class="font-label text-xs uppercase tracking-widest text-slate-500 hover:text-blue-600 underline-offset-4 underline transition-all"
+            href="#"
+            >Privacy</a
+          >
+          <a
+            class="font-label text-xs uppercase tracking-widest text-slate-500 hover:text-blue-600 underline-offset-4 underline transition-all"
+            href="#"
+            >Status</a
+          >
+          <a
+            class="font-label text-xs uppercase tracking-widest text-slate-500 hover:text-blue-600 underline-offset-4 underline transition-all"
+            href="#"
+            >Get Help</a
+          >
+        </div>
+      </div>
+    </footer>
+    <!-- ------------------------- JavaScript — loaded last for performance ------------------------- -->
+    <script src="assets/script.js"></script>
+  </body>
+</html>
