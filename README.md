@@ -82,7 +82,7 @@ PASAD/
 ✅ **Phishing Research & Attack Mapping:** Research into phishing and social engineering attacks.<br>
 ✅ **Phishing Simulations:** Design phishing scenarios (emails, messages, and login interfaces) to demonstrate attacks.<br>
 ✅ **User Behavior Simulation & Analysis:**  Human factors, Users Psychology & Response, and Statistics.<br>
-✅ **Detection & Prevention Strategies:** Practical identification and prevention of phishing (individuals & organizations).<br>
+✅ **Detection & Prevention Strategies:** Identification & prevention (individuals & organizations).<br>
 ✅ **Local Context (Ghana-Focused):** Focus on Mobile Money (MoMo) fraud and Ghanaian-specific attack vectors.<br>
 ✅ **Legal & Compliance Awareness:** GRC, Ghana Data Protection (Act 843) & Cybersecurity Authority (CSA) protocols.<br>
 ✅ **Awareness & Educational Materials:** Creation of cybersecurity awareness resources, including:
@@ -101,7 +101,8 @@ PASAD/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com
+   git clone https://github.com/YaaKhrys/Human-Firewall---PASAD.git
+   
    ````
 2. **Open the project:** Launch index.html in any modern web browser.
 
